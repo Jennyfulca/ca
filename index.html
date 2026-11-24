@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东方针灸中医馆 · 先天体质辨识</title>
+<style>
+  :root{
+    --bg:#F7F2E7; --card:#FFFDF8; --sand:#EFE3D0; --sand-d:#E6D6BD;
+    --ink:#33312B; --green:#2F5D34; --green-d:#234A28; --orange:#C26A3C;
+    --line:#E0D2BA; --muted:#6F6657; --fs:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.9;font-size:var(--fs);padding:22px 14px 64px;}
+  .wrap{max-width:720px;margin:0 auto;}
+  .name-input{margin-top:14px;width:100%;padding:14px 12px;border:2px solid var(--line);border-radius:10px;
+    background:#fff;font-size:17px;font-family:inherit;color:var(--ink);box-sizing:border-box;min-height:50px;}
+  .name-input::placeholder{color:#b3a890;}
+  header{text-align:center;margin-bottom:20px;}
+  .seal{display:inline-block;background:var(--orange);color:#fff;font-size:16px;letter-spacing:3px;
+    padding:7px 18px;border-radius:6px;margin-bottom:12px;font-weight:bold;}
+  h1{font-size:30px;color:var(--green-d);letter-spacing:2px;line-height:1.4;}
+  .sub{color:var(--muted);font-size:16px;margin-top:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 18px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+  .card-title{font-size:22px;color:var(--green-d);font-weight:bold;text-align:center;margin-bottom:6px;letter-spacing:1px;}
+  .card-title::before,.card-title::after{content:"❖";color:var(--orange);font-size:15px;margin:0 8px;vertical-align:middle;}
+  label{display:block;font-size:19px;color:var(--green);margin-bottom:10px;font-weight:bold;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;}
+  select{flex:1;min-width:0;padding:15px 6px;border:2px solid var(--line);border-radius:10px;
+    background:#fff;font-size:18px;font-family:inherit;color:var(--ink);text-align:center;min-height:52px;}
+  .btn{margin-top:18px;width:100%;padding:17px;border:none;border-radius:12px;background:var(--green);
+    color:#fff;font-size:20px;letter-spacing:3px;font-weight:bold;cursor:pointer;font-family:inherit;min-height:56px;}
+  .btn:active{background:var(--green-d);}
+  .btn-report{background:var(--orange);margin-top:14px;}
+  .btn-report:active{background:#a8562d;}
+  .result{display:none;}
+  .year-lead{font-size:16px;color:var(--muted);text-align:center;margin-bottom:14px;line-height:1.7;}
+  .sub-card{background:var(--sand);border-radius:10px;padding:14px 15px;margin-top:13px;border-left:4px solid var(--orange);}
+  .row-title{font-size:19px;color:var(--green-d);font-weight:bold;margin-bottom:7px;}
+  .sub-card p{font-size:18px;margin-bottom:6px;}
+  .sub-card p:last-child{margin-bottom:0;}
+  .jing{color:var(--green);font-weight:bold;background:rgba(47,93,52,.06);padding:8px 10px;border-radius:6px;line-height:1.8;}
+  .sub-card b{color:var(--orange);}
+  .total{background:var(--sand-d);}
+  .quote{text-align:center;font-size:16px;color:var(--orange);font-style:italic;margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);line-height:1.6;}
+  .warn{font-size:15px;color:var(--orange);background:#FBF1E8;border:1px solid #EAD3C2;padding:10px 12px;border-radius:8px;margin-top:12px;line-height:1.7;}
+  .gz{text-align:center;font-size:42px;color:var(--orange);letter-spacing:6px;margin:4px 0 2px;font-weight:bold;}
+  .gz-en{text-align:center;color:var(--muted);font-size:15px;margin-bottom:14px;}
+  .tag{display:inline-block;background:var(--green);color:#fff;font-size:15px;padding:6px 14px;border-radius:20px;margin:0 5px 8px 0;}
+  .sec{margin-top:15px;border-top:1px dashed var(--line);padding-top:13px;}
+  .sec h3{font-size:19px;color:var(--green-d);margin-bottom:7px;letter-spacing:1px;}
+  .sec p{font-size:18px;}
+  .sec.weak h3{color:var(--orange);}
+  .pill{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;}
+  .note{font-size:15px;color:var(--muted);background:var(--sand);border-left:3px solid var(--orange);padding:10px 12px;border-radius:6px;margin-top:10px;}
+  .weak-box{background:#FBF1E8;border:1px solid #EAD3C2;border-radius:10px;padding:14px 15px;margin-top:4px;}
+  .weak-box .row-title{color:var(--orange);}
+  .history{font-size:15px;color:var(--muted);}
+  .history h3{font-size:19px;color:var(--green-d);margin-bottom:8px;}
+  .history div{display:flex;justify-content:space-between;padding:8px 2px;border-bottom:1px dotted var(--line);gap:10px;}
+  .history .hist-item{cursor:pointer;transition:background .15s;border-radius:8px;align-items:flex-start;}
+  .history .hist-item:hover{background:var(--sand);}
+  .history .hist-main{flex:1;color:var(--ink);line-height:1.5;}
+  .history .hist-side{color:var(--muted);font-size:13px;white-space:nowrap;}
+  .history .hist-open{color:var(--orange);font-weight:bold;white-space:nowrap;padding-left:8px;}
+  .history .hist-del{flex:0 0 auto;margin-left:4px;align-self:flex-start;background:#fff;border:1px solid #e3c9b4;border-radius:50%;
+    width:26px;height:26px;line-height:24px;text-align:center;color:#c0392b;font-size:15px;cursor:pointer;font-family:inherit;}
+  .history .hist-del:active{background:#fbeae6;}
+  .clear{background:none;border:none;color:var(--orange);cursor:pointer;font-size:15px;font-family:inherit;margin-top:10px;font-weight:bold;}
+  .disclaimer{font-size:14px;color:var(--muted);text-align:center;margin-top:22px;line-height:1.7;border-top:1px solid var(--line);padding-top:14px;}
+  footer{text-align:center;color:var(--orange);font-size:15px;margin-top:18px;letter-spacing:2px;}
+  .ver{text-align:center;color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:1px;}
+
+  /* 报告弹层 —— 锁定字号 + 强制换行 + 禁止横向溢出 */
+  .modal{position:fixed;inset:0;background:rgba(40,30,20,.6);display:none;overflow-y:auto;overflow-x:hidden;z-index:50;padding:12px 8px 28px;-webkit-overflow-scrolling:touch;}
+  .modal.show{display:block;}
+  .modal-inner{max-width:660px;margin:0 auto;width:100%;}
+  .rpt-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 13px;box-shadow:0 6px 24px rgba(0,0,0,.18);width:100%!important;max-width:100%!important;box-sizing:border-box!important;overflow-wrap:break-word!important;word-break:break-word!important;}
+  .rpt-head{text-align:center;border-bottom:2px solid var(--sand-d);padding-bottom:10px;margin-bottom:10px;}
+  .rpt-seal{display:inline-block;background:var(--orange);color:#fff;font-size:12px!important;letter-spacing:2px;padding:4px 11px;border-radius:6px;margin-bottom:7px;font-weight:bold;}
+  .rpt-title{font-size:16px!important;color:var(--green-d);font-weight:bold;letter-spacing:1px;line-height:1.35;}
+  .rpt-sub{color:var(--muted);font-size:11px!important;margin-top:4px;line-height:1.5;}
+  .rpt-birth{text-align:center;font-size:12px!important;color:var(--ink);background:var(--sand);border-radius:8px;padding:7px;margin-bottom:10px;line-height:1.55;word-break:break-word!important;}
+  .rpt-tags{text-align:center;margin-bottom:8px;line-height:1.4;}
+  .rpt-sec{margin-top:12px;max-width:100%;}
+  .rpt-sec h4{font-size:14.5px!important;color:var(--green-d);margin-bottom:5px;padding-left:10px;border-left:4px solid var(--orange);line-height:1.45;word-break:break-word!important;}
+  .rpt-sec.weak h4{color:var(--orange);border-left-color:var(--orange);}
+  .rpt-sec p{font-size:13px!important;line-height:1.75;margin:0;overflow-wrap:anywhere!important;word-break:break-word!important;white-space:normal!important;}
+  .rpt-sec b{color:var(--orange);font-weight:bold;}
+  .rpt-label{text-align:center;font-size:15px!important;color:var(--green-d);font-weight:bold;line-height:1.5;overflow-wrap:anywhere!important;word-break:break-word!important;white-space:normal!important;}
+  .rpt-note{margin-top:6px;background:#FCF6EE;border:1px dashed #E2CBB4;border-radius:9px;padding:8px 10px;font-size:11.5px!important;line-height:1.65;color:#7a5a3a;overflow-wrap:anywhere!important;word-break:break-word!important;white-space:normal!important;}
+  .rpt-box{background:#FBF1E8;border:1.5px solid var(--orange);border-radius:11px;padding:11px 13px;margin-top:8px;text-align:center;word-break:break-word!important;}
+  .rpt-box .rt{font-size:13.5px!important;color:var(--green-d);font-weight:bold;margin-bottom:4px;}
+  .rpt-box .rp{font-size:16px!important;color:var(--orange);font-weight:bold;letter-spacing:1px;}
+  .rpt-box .rn{font-size:11px!important;color:var(--muted);margin-top:4px;line-height:1.55;}
+  .rpt-disc{font-size:10.5px!important;color:var(--muted);text-align:center;margin-top:12px;line-height:1.65;border-top:1px dashed var(--line);padding-top:9px;word-break:break-word!important;}
+  .rpt-qr{text-align:center;margin-top:12px;max-width:100%;}
+  .rpt-qr canvas{width:168px!important;height:168px!important;border:6px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:8px;max-width:100%;}
+  .rpt-qr .cap{font-size:11px!important;color:var(--muted);margin-top:7px;line-height:1.55;}
+  .rpt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .rbtn{flex:1 1 0;min-width:0!important;padding:13px 6px;border:none;border-radius:11px;background:var(--green);color:#fff;
+    font-size:15px!important;font-weight:bold;cursor:pointer;font-family:inherit;min-height:50px;}
+  .rbtn:active{background:var(--green-d);}
+  .rbtn.ghost{background:#fff;color:var(--green);border:2px solid var(--green);}
+  .rpt-imgbox{margin-top:14px;text-align:center;max-width:100%;overflow-x:hidden;}
+  .rpt-imgbox canvas{max-width:100%;height:auto;display:block;margin:0 auto;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);}
+  .rpt-hint{text-align:center;font-size:12px!important;color:var(--orange);margin-top:9px;line-height:1.55;}
+  .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(35,74,40,.95);color:#fff;
+    padding:12px 22px;border-radius:24px;font-size:16px;z-index:99;opacity:0;transition:opacity .25s;pointer-events:none;max-width:80%;text-align:center;}
+  .toast.show{opacity:1;}
+
+  .label-box{text-align:center;margin:8px 0 2px;}
+  .label-box .lt{font-size:16px;color:var(--muted);margin-bottom:5px;}
+  .label-box .ltag{display:inline-block;background:var(--green);color:#fff;font-size:19px;padding:9px 22px;border-radius:22px;font-weight:bold;letter-spacing:1px;}
+  .sec.avoid h3{color:var(--orange);}
+  .badge{display:inline-block;background:#FBF1E8;color:var(--orange);border:1.5px solid #EAD3C2;font-size:15px;padding:5px 14px;border-radius:18px;margin:8px 6px 0 0;font-weight:bold;}
+  .rpt-badges{text-align:center;margin-top:8px;}
+
+  .wrap{position:relative;}
+  .lang-btn{position:absolute;top:12px;right:12px;background:var(--sand-d);color:var(--green-d);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit;z-index:5;}
+  .lang-btn:active{background:var(--sand);}
+  @media (max-width:380px){h1{font-size:26px;} .gz{font-size:36px;} .card{padding:18px 13px;} .modal{padding:10px 6px 24px;} .rpt-title{font-size:17px;} .rpt-qr canvas{width:160px;height:160px;} .lang-btn{top:8px;right:8px;padding:5px 11px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="seal" id="ui_seal">东方针灸中医馆</div>
+    <h1 id="ui_title">先天体质辨识</h1>
+    <div class="sub" id="ui_sub">五运六气 · 以出生年干支定人身先天禀赋</div>
+    <button id="langBtn" class="lang-btn" onclick="toggleLang()">EN</button>
+  </header>
+
+  <div class="card">
+    <label id="ui_inputLabel">请选择您的出生日期</label>
+    <div class="row">
+      <select id="y"></select><select id="m"></select><select id="d"></select><select id="h"></select>
+    </div>
+    <div style="font-size:15px;color:var(--muted);margin-top:8px" id="ui_timeTip"></div>
+    <input id="nm" class="name-input" type="text" maxlength="20" placeholder="姓名 / 编号（选填，用于报告与记录）" />
+    <button class="btn" id="ui_btn" onclick="judge()">辨识我的先天体质</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="gz" id="gz"></div>
+    <div class="gz-en" id="gzEn"></div>
+    <div style="text-align:center" id="tags"></div>
+    <div class="label-box" id="labelBox"></div>
+    <div class="sec"><h3 id="ui_sec1">一、五运 · 脏腑禀赋</h3><p id="yunText"></p></div>
+    <div class="sec"><h3 id="ui_sec2">二、六气 · 气化背景</h3><p id="qiText"></p></div>
+    <div class="sec"><h3 id="ui_sec3">三、综合先天体质倾向</h3><p id="sumText"></p><div class="pill" id="sumTags"></div></div>
+    <div class="sec weak"><h3 id="ui_sec4">四、弱项与需注意</h3><div class="weak-box" id="weakBox"></div></div>
+    <div class="sec"><h3 id="ui_sec5">五、日常养护与饮食建议</h3><div class="quote" id="ui_quote"></div><p id="tips"></p><div class="warn" id="ui_warn"></div></div>
+    <div class="sec avoid"><h3 id="ui_sec6">六、宜忌要点（忌口）</h3><div class="weak-box" id="avoidBox"></div></div>
+    <div class="note" id="note"></div>
+    <button class="btn btn-report" id="ui_reportBtn" onclick="openReport()">生成体质报告（可转发）</button>
+  </div>
+
+  <div class="card history" id="historyBox" style="display:none">
+    <h3 id="ui_histTitle">历史辨识记录</h3>
+    <div id="historyList"></div>
+    <button class="clear" id="ui_clear" onclick="clearHistory()">清空记录</button>
+  </div>
+
+  <div class="disclaimer" id="ui_disc"></div>
+  <footer id="ui_footer">— 上工治未病 · 顺天时而养 —</footer>
+  <div class="ver">先天体质辨识 · 版本 v2.1（运气算法 v1.0）</div>
+</div>
+
+<!-- 报告弹层 -->
+  <div class="modal" id="reportModal">
+  <div class="modal-inner">
+    <div class="rpt-card" id="rptCard"></div>
+    <div class="rpt-actions">
+      <button class="rbtn" id="btnSave" onclick="saveReport()">另存为</button>
+      <button class="rbtn" id="btnCopy" onclick="copyReport()">复制文字</button>
+      <button class="rbtn" id="btnShare" onclick="shareReport()">分享</button>
+      <button class="rbtn ghost" id="btnClose" onclick="closeReport()">关闭</button>
+    </div>
+    <div class="rpt-imgbox" id="rptImgBox"></div>
+    <div class="rpt-hint" id="rptHint"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 安全 localStorage（本地 file:// 或隐私模式不会崩）===== */
+const _mem={};
+function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return k in _mem?_mem[k]:null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){_mem[k]=v;} }
+function lsDel(k){ try{localStorage.removeItem(k);}catch(e){delete _mem[k];} }
+
+/* ===== 双语静态文案 ===== */
+const UI = {
+  zh:{
+    seal:'东方针灸中医馆', title:'先天体质辨识',
+    sub:'五运六气 · 以出生年干支推先天禀赋倾向（科普推演）',
+    quote:'「食岁谷以全其真，食间谷以保其精。」<br>——《素问·至真要大论》',
+    warn:'⚠ 药物调养须由执业中医师辨证处方。本工具所陈饮食与调理方向仅作养生参考，不作诊疗依据。',
+    inputLabel:'请选择您的出生日期', btn:'辨识我的先天体质',
+    sec1:'一、五运 · 脏腑禀赋', sec2:'二、六气 · 气化背景',
+    sec3:'三、综合先天禀赋倾向（科普推演）', sec4:'四、弱项与需注意', sec5:'五、日常养护与饮食建议', sec6:'六、宜忌要点（忌口）', labelTitle:'先天禀赋标签（科普推演）', inputTime:'请选择出生时辰（仅作记录，先天禀赋以出生年干支为准）',
+    note:'提示：本工具所判为「先天禀赋倾向（科普推演）」，并非临床体质诊断或证候判定。五运六气论体质，重在「先天禀赋之偏」，并非定数；后天调养、地域环境、生活习惯皆可纠偏。本工具仅据出生年干支（以立春约2月4日为界）推算先天禀赋倾向，属运气学说一脉，与临床「九种体质」分类、以及医师望闻问切之四诊合参不可等同，仅作养生参考。若生于立春当日（约2月4日）前后1–2天，建议以当年实际交节时刻复核，结果可能相反。',
+    histTitle:'历史辨识记录', clear:'清空记录', reportBtn:'生成体质报告（可转发）',
+    disc:'本工具依据中医「五运六气」运气学说，由出生年干支推算先天禀赋倾向（科普推演，非体质诊断），<br>干支纪年以立春为界（约公历2月4日），边界前后1–2日出生者结果或略有偏差。<br>上述仅供养生参考与科普使用，<b>不构成任何疾病诊断或医疗建议，亦不提供在线开方</b>，与临床辨证不可等同。<br>如有身体不适，请至东方针灸中医馆或正规医疗机构就诊。在公共/共享设备上使用后，请点「清空记录」保护隐私。',
+    footer:'— 上工治未病 · 顺天时而养 —',
+    rptTitle:'先天体质报告', rptSub:'五运六气 · 先天禀赋辨识',
+    rConcl:'一、禀赋倾向结论', rWeak:'二、弱项与需注意', rCare:'三、饮食与调理建议',
+    rAvoid:'四、宜忌 · 忌口',
+    rContact:'五、到院咨询 / 预约调理',
+    rLabel:'禀赋标签',
+    rDisc:'※ 本报告依据中医「五运六气」推算先天禀赋倾向，仅供养生参考，不作诊疗依据。',
+    rContactNote:'到院咨询 / 预约电话：416 800 3978（本工具仅供养生科普，不提供在线开方；调理须经执业中医师面诊辨证）',
+    btnSave:'另存为', btnCopy:'复制文字', btnShare:'分享', btnClose:'关闭',
+    toastCopy:'已复制，可粘贴到微信发给客人', toastNoShare:'当前环境不支持系统分享，已为您复制文字'
+  },
+  en:{
+    seal:'DongFang Acupuncture & TCM Clinic', title:'Inborn Constitution Assessment',
+    sub:'Five Movements & Six Qi · inborn endowment by birth-year stem-branch',
+    quote:'"Eat the grain of the year to preserve the true, eat the interstitial grain to protect the essence."<br>— Suwen · Zhi Zhen Yao Da Lun',
+    warn:'⚠ Herbal regulation must be prescribed by a licensed TCM practitioner. The dietary and lifestyle guidance here is for wellness reference only, not a basis for diagnosis or treatment.',
+    inputLabel:'Select your date of birth', btn:'Assess my inborn constitution',
+    sec1:'I. Five Movements · Organ endowment', sec2:'II. Six Qi · Qi-transformation background',
+    sec3:'III. Integrated inborn endowment tendency (science popularization)', sec4:'IV. Weak links & cautions', sec5:'V. Daily care & dietary advice', sec6:'VI. Do\'s & Don\'ts (foods to avoid)', labelTitle:'Inborn endowment label (science popularization)', inputTime:'Select your birth hour (recorded only; assessment uses the birth-year stem-branch)',
+    note:'Note: the result here is an "inborn endowment tendency (science popularization inference)," not a clinical constitution diagnosis or syndrome judgment. Assessing constitution via Five Movements & Six Qi emphasizes the bias of inborn endowment, not a fixed fate; postnatal care, environment and habits can correct it. This tool infers only the inborn endowment tendency from the birth-year stem-branch (boundary ~Feb 4, Start-of-Spring), belongs to the "Yunqi" lineage, and must not be equated with the clinical "Nine Constitutions" classification or a practitioner\'s four examinations. For reference only. If born 1–2 days around Start-of-Spring (~Feb 4), verify against that year\'s actual solar-term time, as the result may flip.',
+    histTitle:'Assessment history', clear:'Clear records', reportBtn:'Generate constitution report (shareable)',
+    disc:'This tool infers inborn endowment tendency from the birth-year stem-branch per TCM "Five Movements & Six Qi" (science popularization, not a constitution diagnosis). The stem-branch year follows Start-of-Spring (~Feb 4 Gregorian); those born 1–2 days around the boundary may see slight variation. For wellness reference and science popularization only, <b>not any disease diagnosis or medical advice, and no online prescription</b>, and not equivalent to clinical differentiation. If unwell, please visit DongFang Acupuncture & TCM Clinic or a regular medical institution. On a public/shared device, tap "Clear records" afterward to protect privacy.',
+    footer:'— Treat disease before it arises · live in accord with heaven\'s timing —',
+    rptTitle:'Inborn Constitution Report', rptSub:'Five Movements & Six Qi · inborn endowment',
+    rConcl:'I. Endowment conclusion', rWeak:'II. Weak links & cautions', rCare:'III. Diet & care advice',
+    rAvoid:'IV. Do\'s & Don\'ts · foods to avoid',
+    rContact:'V. In-clinic consultation / appointment',
+    rLabel:'Endowment label',
+    rDisc:'※ This report infers inborn endowment tendency per TCM "Five Movements & Six Qi," for wellness reference only, not a basis for diagnosis or treatment.',
+    rContactNote:'In-clinic consultation / appointment: 416 800 3978 (this tool does not prescribe online; care requires an in-person practitioner consultation)',
+    btnSave:'Save', btnCopy:'Copy', btnShare:'Share', btnClose:'Close',
+    toastCopy:'Copied — paste to WeChat for your client', toastNoShare:'System share unavailable; text copied instead'
+  }
+};
+
+/* ===== 五运（天干）===== */
+const YUN = {
+  '甲':{e:{zh:'土',en:'Earth'},lv:{zh:'太过',en:'Excess'},
+    t:{zh:'土运太过之年。湿土之气偏盛，脾土壅滞。先天脾运偏旺而易生痰湿，_body_受抑。',
+       en:'Earth Movement in Excess. Damp-earth qi is predominant; the Spleen-Earth is congested. The inborn Spleen transformation tends to be strong and prone to phlegm-damp, while _body_ is suppressed.'},
+    s:{zh:'体形偏丰、身重困倦、头面易出油、消化偏滞、易生湿疹与大便黏腻。',
+       en:'Fuller build, heaviness and fatigue, oily face, sluggish digestion, prone to eczema and sticky stools.'},
+    tips:{zh:'健脾祛湿为要：少甜腻生冷，常食薏苡仁、茯苓、山药、赤小豆；适度运动出汗，避免久坐久卧。可常按揉足三里、阴陵泉。',
+       en:'Strengthen Spleen and drain damp: reduce sweet/cold/raw foods; eat coix seed, poria, yam, red bean; exercise to sweat; avoid prolonged sitting. Massage Zusanli (ST36), Yinlingquan (SP9).'}},
+  '己':{e:{zh:'土',en:'Earth'},lv:{zh:'不及',en:'Deficiency'},
+    t:{zh:'土运不及之年。脾气本虚，风木之气乘而克之。先天脾土偏弱，_body_易为弱脏。',
+       en:'Earth Movement in Deficiency. The Spleen-qi is inherently weak, and wind-wood encroaches upon it. The inborn Spleen-Earth is weak, and _body_ becomes the vulnerable organ.'},
+    s:{zh:'消化力偏弱、食少易胀、大便易溏、四肢乏力、面色偏黄。',
+       en:'Weak digestion, poor appetite with bloating, loose stools, limb fatigue, sallow complexion.'},
+    tips:{zh:'健脾益气为主：饮食规律、温软易消化，常食小米、山药、莲子、红枣；忌暴饮暴食与生冷瓜果。可常按揉足三里、中脘。',
+       en:'Fortify Spleen and boost qi: regular, warm, soft, easily digestible meals; millet, yam, lotus seed, red date; avoid overeating and cold fruits. Massage Zusanli (ST36), Zhongwan (CV12).'}},
+  '丙':{e:{zh:'水',en:'Water'},lv:{zh:'太过',en:'Excess'},
+    t:{zh:'水运太过之年。寒气流行，肾水偏亢，_body_受抑。先天肾阳易为寒邪所困。',
+       en:'Water Movement in Excess. Cold qi prevails; Kidney-Water is hyperactive, and _body_ is suppressed. The inborn Kidney-Yang is easily bound by cold.'},
+    s:{zh:'畏寒肢冷、手足不温、面色偏暗、易感寒、易水肿或腰膝酸重。',
+       en:'Cold aversion, cold limbs, dull complexion, prone to cold, edema or sore heavy lower back and knees.'},
+    tips:{zh:'温阳散寒为要：避寒就温，常食黑豆、黑芝麻、羊肉（适量）、桂圆；可温灸关元、命门（须由专业中医师操作）。冬日尤当护腰足。',
+       en:'Warm Yang and disperse cold: keep warm, eat black soybean, black sesame, mutton (moderate), longan; moxa Guanyuan (CV4), Mingmen (GV4). Protect waist/feet in winter.'}},
+  '辛':{e:{zh:'水',en:'Water'},lv:{zh:'不及',en:'Deficiency'},
+    t:{zh:'水运不及之年。肾水本虚，湿土之气乘之。先天肾精偏弱，_body_易为弱脏。',
+       en:'Water Movement in Deficiency. The Kidney-Water is inherently weak, and damp-earth encroaches. The inborn Kidney essence is weak, and _body_ becomes the vulnerable organ.'},
+    s:{zh:'精力不足、腰膝酸软、健忘耳鸣、易疲劳、不耐长久劳作。',
+       en:'Low energy, sore weak lower back and knees, poor memory/tinnitus, easily fatigued, low endurance.'},
+    tips:{zh:'补肾填精为主：黑色食物（黑豆、桑葚、核桃）、适度温补、节欲保精；避免熬夜与过度耗神。可按揉太溪、涌泉。',
+       en:'Tonify Kidney and essence: black foods (black bean, mulberry, walnut), moderate warm supplementation, conserve essence; avoid staying up late. Massage Taixi (KI3), Yongquan (KI1).'}},
+  '戊':{e:{zh:'火',en:'Fire'},lv:{zh:'太过',en:'Excess'},
+    t:{zh:'火运太过之年。炎暑流行，心火偏亢，_body_受抑。先天心火易旺而上炎。',
+       en:'Fire Movement in Excess. Scorching heat prevails; Heart-Fire is hyperactive, and _body_ is suppressed. The inborn Heart-Fire tends to flare upward.'},
+    s:{zh:'面红唇干、易心烦失眠、口疮、急躁、上焦易热。',
+       en:'Red face, dry lips, easy irritability/insomnia, mouth ulcers, impatience, upper-body heat.'},
+    tips:{zh:'清心降火为要：忌辛辣酒燥，常食苦味（苦瓜、莲子心）、绿色蔬菜；保证午休、静心少怒。可按揉内关、劳宫。',
+       en:'Clear Heart and descend fire: avoid acrid/spicy/alcohol; eat bitter foods (bitter melon, lotus plumule), greens; ensure midday rest, calm mind. Massage Neiguan (PC6), Laogong (PC8).'}},
+  '癸':{e:{zh:'火',en:'Fire'},lv:{zh:'不及',en:'Deficiency'},
+    t:{zh:'火运不及之年。心气本虚，寒水之气乘之。先天心阳偏弱，_body_易为弱脏。',
+       en:'Fire Movement in Deficiency. The Heart-qi is inherently weak, and cold-water encroaches. The inborn Heart-Yang is weak, and _body_ becomes the vulnerable organ.'},
+    s:{zh:'畏寒喜暖、心悸气短、精神易不振、手足凉、面色㿠白。',
+       en:'Cold preference, palpitations, short breath, low spirit, cold limbs, pale lustreless complexion.'},
+    tips:{zh:'温养心阳为主：避寒、适度温性食物（桂圆、红枣、肉桂少量）；规律作息、适度舒展运动以通阳气。可按揉内关、膻中。',
+       en:'Warm and nourish Heart-Yang: avoid cold; moderately warm foods (longan, red date, little cinnamon); regular routine, gentle stretching. Massage Neiguan (PC6), Danzhong (CV17).'}},
+  '庚':{e:{zh:'金',en:'Metal'},lv:{zh:'太过',en:'Excess'},
+    t:{zh:'金运太过之年。燥气流行，肺金偏亢，_body_受抑。先天肺燥而易伤肝木。',
+       en:'Metal Movement in Excess. Dryness qi prevails; Lung-Metal is hyperactive, and _body_ is suppressed. The inborn Lung tends to dryness and injures Liver-Wood.'},
+    s:{zh:'皮肤毛发偏燥、易干咳少痰、口鼻干、大便易结、性急易躁。',
+       en:'Dry skin/hair, easy dry cough with little phlegm, dry nose/mouth, constipation, irritability.'},
+    tips:{zh:'润肺清燥为要：多饮水，常食白色润燥之品（梨、百合、银耳、蜂蜜）；忌辛辣刺激与过燥环境。可按揉太渊、鱼际。',
+       en:'Moisten Lung and clear dryness: drink more, eat white moistening foods (pear, lily bulb, tremella, honey); avoid acrid/spicy. Massage Taiyuan (LU9), Yuji (LU10).'}},
+  '乙':{e:{zh:'金',en:'Metal'},lv:{zh:'不及',en:'Deficiency'},
+    t:{zh:'金运不及之年。肺气本虚，心火之气乘之。先天肺卫偏弱，_body_易为弱脏。',
+       en:'Metal Movement in Deficiency. The Lung-qi is inherently weak, and Heart-fire encroaches. The inborn Lung defense is weak, and _body_ becomes the vulnerable organ.'},
+    s:{zh:'易感冒、气短声低、皮毛不固、遇风冷易咳、汗出偏多。',
+       en:'Prone to colds, low weak voice, insecure skin/hair, cough with wind-cold, easy sweating.'},
+    tips:{zh:'补肺固表为主：避风寒、常食白色温润食物（山药、莲子、杏仁）；适度户外以强卫气。可按揉肺俞、太渊。',
+       en:'Tonify Lung and secure the exterior: avoid wind-cold; eat warm moist white foods (yam, lotus seed, almond); moderate outdoors. Massage Feishu (BL13), Taiyuan (LU9).'}},
+  '壬':{e:{zh:'木',en:'Wood'},lv:{zh:'太过',en:'Excess'},
+    t:{zh:'木运太过之年。风气流行，肝木偏亢，_body_受抑。先天肝气易旺而乘脾土。',
+       en:'Wood Movement in Excess. Wind qi prevails; Liver-Wood is hyperactive, and _body_ is suppressed. The inborn Liver-qi tends to be exuberant and encroach on Spleen-Earth.'},
+    s:{zh:'情绪易波动、性急、胁肋易胀、目干、眠浅、脾胃易为所累。',
+       en:'Mood swings, impatience, hypochondriac distension, dry eyes, light sleep, Spleen-Stomach easily burdened.'},
+    tips:{zh:'舒肝理气、兼固脾胃为要：忌怒、少酸多甘以缓肝；因肝木易克脾土，宜常食黄色健脾食物——南瓜、小米、山药、枣仁、茯苓；忌寒凉生冷。可常食菠菜、芹菜、玫瑰花代茶饮；早睡养肝。可按揉太冲、期门、足三里。',
+       en:'Soothe Liver and also secure Spleen: avoid anger, less sour / more sweet; because Liver-Wood harms Spleen-Earth, regularly eat yellow spleen-strengthening foods — pumpkin, millet, yam, jujube seed, poria; avoid cold/raw. Eat spinach, celery, rose tea; early sleep. Massage Taichong (LR3), Qimen (LR14), Zusanli (ST36).'}},
+  '丁':{e:{zh:'木',en:'Wood'},lv:{zh:'不及',en:'Deficiency'},
+    t:{zh:'木运不及之年。肝血本虚，燥金之气乘之。先天肝血偏弱，_body_易为弱脏。',
+       en:'Wood Movement in Deficiency. The Liver-blood is inherently weak, and dry-metal encroaches. The inborn Liver-blood is weak, and _body_ becomes the vulnerable organ.'},
+    s:{zh:'肝血不足、易疲乏力、胆怯易惊、爪甲不荣、目涩、不耐劳。',
+       en:'Liver-blood deficiency, fatigue, timidity, brittle nails, dry eyes, low endurance.'},
+    tips:{zh:'养血柔肝为主：避风、规律作息、常食猪肝（适量）、黑芝麻、枸杞、红枣；少郁少怒。可按揉三阴交、太冲。',
+       en:'Nourish blood and soften Liver: avoid wind, regular routine, eat liver (moderate), black sesame, goji, red date; less worry/anger. Massage Sanyinjiao (SP6), Taichong (LR3).'}}
+};
+const WEAK = {'己':{zh:'脾',en:'Spleen'},'辛':{zh:'肾',en:'Kidney'},'癸':{zh:'心',en:'Heart'},'乙':{zh:'肺',en:'Lung'},'丁':{zh:'肝',en:'Liver'}};
+const SUPP = {'甲':{zh:'肾',en:'Kidney'},'丙':{zh:'心',en:'Heart'},'戊':{zh:'肺',en:'Lung'},'庚':{zh:'肝',en:'Liver'},'壬':{zh:'脾',en:'Spleen'}};
+
+/* ===== 六气（地支）===== */
+const QI = {
+  '子':{stKey:'shaoyin',zqKey:'yangming',d:{zh:'君火司天，天时偏热，上焦与心系易热。',en:'Sovereign Fire supervising heaven; tends toward heat — the upper burner and heart system easily overheat.'}},
+  '午':{stKey:'shaoyin',zqKey:'yangming',d:{zh:'君火司天，天时偏热，上焦与心系易热。',en:'Sovereign Fire supervising heaven; tends toward heat — the upper burner and heart system easily overheat.'}},
+  '丑':{stKey:'taiyin',zqKey:'taiyang',d:{zh:'湿土司天，天时偏湿，脾土易为湿困。',en:'Damp-Earth supervising heaven; tends toward damp — the Spleen-Earth is easily bogged by damp.'}},
+  '未':{stKey:'taiyin',zqKey:'taiyang',d:{zh:'湿土司天，天时偏湿，脾土易为湿困。',en:'Damp-Earth supervising heaven; tends toward damp — the Spleen-Earth is easily bogged by damp.'}},
+  '寅':{stKey:'shaoyang',zqKey:'jueyin',d:{zh:'相火司天，天时偏火，易生火热之象。',en:'Ministerial Fire supervising heaven; tends toward fire — heat signs easily arise.'}},
+  '申':{stKey:'shaoyang',zqKey:'jueyin',d:{zh:'相火司天，天时偏火，易生火热之象。',en:'Ministerial Fire supervising heaven; tends toward fire — heat signs easily arise.'}},
+  '卯':{stKey:'yangming',zqKey:'shaoyin',d:{zh:'燥金司天，天时偏燥，肺与皮毛易燥。',en:'Dryness-Metal supervising heaven; tends toward dryness — Lung and skin/hair easily dry.'}},
+  '酉':{stKey:'yangming',zqKey:'shaoyin',d:{zh:'燥金司天，天时偏燥，肺与皮毛易燥。',en:'Dryness-Metal supervising heaven; tends toward dryness — Lung and skin/hair easily dry.'}},
+  '辰':{stKey:'taiyang',zqKey:'taiyin',d:{zh:'寒水司天，天时偏寒，肾与下焦易寒。',en:'Cold-Water supervising heaven; tends toward cold — Kidney and lower burner easily chill.'}},
+  '戌':{stKey:'taiyang',zqKey:'taiyin',d:{zh:'寒水司天，天时偏寒，肾与下焦易寒。',en:'Cold-Water supervising heaven; tends toward cold — Kidney and lower burner easily chill.'}},
+  '巳':{stKey:'jueyin',zqKey:'shaoyang',d:{zh:'风木司天，天时偏风，肝与筋目易动。',en:'Wind-Wood supervising heaven; tends toward wind — Liver, tendons and eyes easily stir.'}},
+  '亥':{stKey:'jueyin',zqKey:'shaoyang',d:{zh:'风木司天，天时偏风，肝与筋目易动。',en:'Wind-Wood supervising heaven; tends toward wind — Liver, tendons and eyes easily stir.'}}
+};
+const SI_NAME = {
+  jueyin:{zh:'厥阴风木',en:'Jueyin Wind-Wood'}, shaoyin:{zh:'少阴君火',en:'Shaoyin Sovereign Fire'},
+  taiyin:{zh:'太阴湿土',en:'Taiyin Damp-Earth'}, shaoyang:{zh:'少阳相火',en:'Shaoyang Ministerial Fire'},
+  yangming:{zh:'阳明燥金',en:'Yangming Dryness-Metal'}, taiyang:{zh:'太阳寒水',en:'Taiyang Cold-Water'}
+};
+const SI_TIAN = {
+  jueyin:{jing:{zh:'风淫所胜，平以辛凉，佐以苦甘，以甘缓之，以酸泻之',en:'When wind prevails as excess in the heaven, counterbalance with pungent-cool, assist with bitter-sweet, soften with sweet, drain with sour'},
+    wei:{zh:'辛凉',en:'Pungent-Cool'},food:{zh:'薄荷、菊花、桑叶、芹菜',en:'Mint, Chrysanthemum, Mulberry leaf, Celery'},
+    yao:{zh:'宜辛凉疏散，薄荷、桑叶之属；汤剂可参辛凉解表类（须医师处方）',en:'Favor pungent-cool dispersing herbs (Mint, Mulberry leaf); decoctions may reference pungent-cool release-exterior formulas (by prescription).'}},
+  shaoyin:{jing:{zh:'热淫所胜，平以咸寒，佐以苦甘，以酸收之',en:'When heat prevails as excess in the heaven, counterbalance with salty-cold, assist with bitter-sweet, astringe with sour'},
+    wei:{zh:'咸寒',en:'Salty-Cold'},food:{zh:'海带、紫菜、黑豆、梨、莲藕',en:'Kelp, Laver, Black soybean, Pear, Lotus root'},
+    yao:{zh:'宜咸寒清热生津，海带、黑豆之属；汤剂可参咸寒泻火类',en:'Favor salty-cold to clear heat and generate fluid (Kelp, Black soybean); decoctions may reference salty-cold fire-draining formulas.'}},
+  taiyin:{jing:{zh:'湿淫所胜，平以苦热，佐以酸辛，以苦燥之，以淡泄之',en:'When dampness prevails as excess in the heaven, counterbalance with bitter-warm, assist with sour-pungent, dry with bitter, drain with bland'},
+    wei:{zh:'苦温',en:'Bitter-Warm'},food:{zh:'陈皮、茯苓、薏苡仁、砂仁',en:'Aged tangerine peel, Poria, Coix seed, Amomum'},
+    yao:{zh:'宜苦温燥湿，陈皮、茯苓之属；汤剂可参苦温化湿类',en:'Favor bitter-warm to dry damp (Poria, Aged tangerine peel); decoctions may reference bitter-warm damp-transforming formulas.'}},
+  shaoyang:{jing:{zh:'火淫所胜，平以酸冷，佐以苦甘，以酸收之，以苦发之，以酸复之',en:'When fire prevails as excess in the heaven, counterbalance with sour-cool, assist with bitter-sweet, astringe with sour, disperse with bitter, restore with sour'},
+    wei:{zh:'酸冷',en:'Sour-Cool'},food:{zh:'乌梅、番茄、梨、绿茶',en:'Smoked plum, Tomato, Pear, Green tea'},
+    yao:{zh:'宜酸冷敛火，乌梅、绿茶之属；汤剂可参酸苦泻火类',en:'Favor sour-cool to contain fire (Smoked plum, Green tea); decoctions may reference sour-bitter fire-draining formulas.'}},
+  yangming:{jing:{zh:'燥淫所胜，平以苦温，佐以酸辛，以苦下之',en:'When dryness prevails as excess in the heaven, counterbalance with bitter-warm, assist with sour-pungent, purge with bitter'},
+    wei:{zh:'苦温',en:'Bitter-Warm'},food:{zh:'杏仁、陈皮、百合、梨（佐姜）',en:'Almond, Aged tangerine peel, Lily bulb, Pear (with ginger)'},
+    yao:{zh:'宜苦温润燥，杏仁、百合之属；汤剂可参温润下气类',en:'Favor bitter-warm to moisten dryness (Almond, Lily bulb); decoctions may reference warm-moistening descending formulas.'}},
+  taiyang:{jing:{zh:'寒淫所胜，平以辛热，佐以甘苦，以咸泻之',en:'When cold prevails as excess in the heaven, counterbalance with pungent-warm, assist with sweet-bitter, drain with salty'},
+    wei:{zh:'辛热',en:'Pungent-Warm'},food:{zh:'干姜、肉桂、羊肉（适量）、花椒',en:'Dried ginger, Cinnamon, Mutton (moderate), Sichuan pepper'},
+    yao:{zh:'宜辛热散寒，干姜、肉桂之属；汤剂可参辛热温阳类',en:'Favor pungent-warm to disperse cold (Dried ginger, Cinnamon); decoctions may reference pungent-warm Yang-warming formulas.'}}
+};
+const ZAI_QUAN = {
+  jueyin:{jing:{zh:'风淫于内，治以辛凉，佐以苦甘，以甘缓之，以辛散之',en:'When wind prevails within, treat with pungent-cool, assist with bitter-sweet, soften with sweet, disperse with pungent'},
+    wei:{zh:'辛凉',en:'Pungent-Cool'},food:{zh:'薄荷、菊花、芹菜',en:'Mint, Chrysanthemum, Celery'},
+    yao:{zh:'辛凉疏风，与司天同',en:'Pungent-cool to dispel wind, same as Si-Tian.'}},
+  shaoyin:{jing:{zh:'热淫于内，治以咸寒，佐以甘苦，以酸收之，以苦发之',en:'When heat prevails within, treat with salty-cold, assist with sweet-bitter, astringe with sour, disperse with bitter'},
+    wei:{zh:'咸寒',en:'Salty-Cold'},food:{zh:'海带、黑豆、梨',en:'Kelp, Black soybean, Pear'},
+    yao:{zh:'咸寒清里热',en:'Salty-cold to clear internal heat.'}},
+  taiyin:{jing:{zh:'湿淫于内，治以苦热，佐以酸淡，以苦燥之，以淡泄之',en:'When dampness prevails within, treat with bitter-warm, assist with sour-bland, dry with bitter, drain with bland'},
+    wei:{zh:'苦温',en:'Bitter-Warm'},food:{zh:'茯苓、薏苡仁、陈皮',en:'Poria, Coix seed, Aged tangerine peel'},
+    yao:{zh:'苦温化里湿',en:'Bitter-warm to transform internal damp.'}},
+  shaoyang:{jing:{zh:'火淫于内，治以咸冷，佐以苦辛，以酸收之，以苦发之',en:'When fire prevails within, treat with salty-cool, assist with bitter-pungent, astringe with sour, disperse with bitter'},
+    wei:{zh:'咸冷',en:'Sour-Cool'},food:{zh:'乌梅、绿茶、梨',en:'Smoked plum, Green tea, Pear'},
+    yao:{zh:'咸冷泻火',en:'Salty-cool to drain fire.'}},
+  yangming:{jing:{zh:'燥淫于内，治以苦温，佐以甘辛，以苦下之',en:'When dryness prevails within, treat with bitter-warm, assist with sweet-pungent, purge with bitter'},
+    wei:{zh:'苦温',en:'Bitter-Warm'},food:{zh:'杏仁、桃仁、百合',en:'Almond, Peach kernel, Lily bulb'},
+    yao:{zh:'苦温润下',en:'Bitter-warm to moisten and descend.'}},
+  taiyang:{jing:{zh:'寒淫于内，治以甘热，佐以苦辛，以咸泻之，以辛润之，以苦坚之',en:'When cold prevails within, treat with sweet-warm, assist with bitter-pungent, drain with salty, moisten with pungent, consolidate with bitter'},
+    wei:{zh:'甘热',en:'Sweet-Warm'},food:{zh:'干姜、羊肉、桂圆',en:'Dried ginger, Mutton, Longan'},
+    yao:{zh:'甘热温里',en:'Sweet-warm to warm the interior.'}}
+};
+/* YUN_GU（五谷五果五畜·五行归属）当前未参与计算，保留为参考资料 */
+
+/* ===== 先天体质标签 / 宜忌 / 运气生成数 / 特殊年份 ===== */
+const YUN_LABEL = {
+  '甲':{zh:'痰湿内盛',en:'Phlegm-damp interior excess'},
+  '己':{zh:'脾虚气弱',en:'Spleen-Qi weakness'},
+  '丙':{zh:'寒水偏盛',en:'Cold-water predominant'},
+  '辛':{zh:'肾虚精弱',en:'Kidney essence weak'},
+  '戊':{zh:'心火亢旺',en:'Heart-Fire exuberant'},
+  '癸':{zh:'心阳不足',en:'Heart-Yang deficient'},
+  '庚':{zh:'燥金偏盛',en:'Dryness-metal predominant'},
+  '乙':{zh:'肺卫不足',en:'Lung defense insufficient'},
+  '壬':{zh:'肝旺脾弱',en:'Liver exuberant, Spleen weak'},
+  '丁':{zh:'肝血不足',en:'Liver-blood insufficient'}
+};
+const QI_MOD = {
+  jueyin:{zh:'兼风',en:'with wind'}, shaoyin:{zh:'兼热',en:'with heat'},
+  taiyin:{zh:'兼湿',en:'with damp'}, shaoyang:{zh:'兼火',en:'with fire'},
+  yangming:{zh:'兼燥',en:'with dryness'}, taiyang:{zh:'兼寒',en:'with cold'}
+};
+const AVOID = {
+  '甲':{zh:'甜腻、生冷、油腻宜节制：奶茶甜点、油炸烧烤、肥甘厚味及冰镇饮料、生冷瓜果，皆易助湿生痰、困遏脾运。宜清淡温食、每餐七分饱，饭后缓行以助运化。',en:'sweet-greasy, cold-raw, oily (breeds damp-phlegm)'},
+  '己':{zh:'生冷瓜果与暴饮暴食偏伤脾：冰饮、生鱼片、大量寒性水果，及饥饱无常、吃得过撑，皆损脾阳、滞碍运化。宜定时定量、温软易消化，细嚼慢咽，忌边食边饮大量水。',en:'cold fruits, overeating (harms Spleen)'},
+  '丙':{zh:'生冷寒凉与冰饮须避：冰镇食品、生凉瓜果、久处低温环境易伤肾阳、凝滞气血。宜温食暖身，寒冬尤当护腰足、少涉水受寒，出汗后及时擦干避风。',en:'cold-raw, iced drinks (damages Yang)'},
+  '辛':{zh:'熬夜、过劳、房劳易耗肾精：长期睡眠不足、强力劳作、过度耗散皆令精气亏虚。宜节欲保精、早睡养肾、劳逸有度，冬日少耗散，房事有节。',en:'staying up, overwork, excess (drains essence)'},
+  '戊':{zh:'辛辣、酒与温燥之物助火：辣椒、烈酒、花椒八角、烧烤煎炸易引心火上炎。宜清淡微苦、清凉润燥，忌烦躁暴怒、烈酒咖啡，午后少浓茶。',en:'acrid, alcohol, warming-dry (fuels fire)'},
+  '癸':{zh:'生冷与过度清凉伤心阳：冰饮、寒凉药食、久处空调冷环境易致心阳不振。宜温通心阳、适度辛温，避风口与骤冷，睡前热水泡脚助阳入阴。',en:'cold-raw, over-cooling (harms Yang)'},
+  '庚':{zh:'辛辣、酒与燥热伤津：辣椒烈酒、煎炸烘焙、过咸皆耗伤肺津胃液。宜润燥为先，多饮温水，常食白色润肺之品，居室勿过燥热。',en:'acrid, alcohol, dry-heat (harms fluid)'},
+  '乙':{zh:'风寒、过汗与耗散伤肺卫：当风直吹、大汗淋漓、过度发汗与劳累皆令卫外不固。宜避风寒、适度收敛、微汗即止，换季与流感季尤护颈背，汗后避风。',en:'wind-cold, excess sweat, dispersion (harms defense)'},
+  '壬':{zh:'暴怒与过酸收涩助肝克脾：大怒伤肝、过食酸涩壅滞气机。宜舒肝解郁、少怒多宽，常食黄色健脾食物以防肝木乘土，情志舒畅胜服药。',en:'rage, excessive sour-astringent (feeds Liver overpowering Spleen)'},
+  '丁':{zh:'耗血、郁怒与熬夜伤肝血：久视用目、思虑郁结、动怒及晚睡皆耗肝血。宜养血柔肝、早睡养肝、少思少怒，远烟酒，用眼每半时辰歇目。',en:'blood-draining, anger, staying up (harms Liver-blood)'}
+};
+const AVOID_QI = {
+  taiyang:{zh:'寒水司天之年，保暖避寒为要：腰足、颈背尤当护暖，忌冷饮冰品、冒雨涉水、久居寒湿之地；冬日可温敷护阳（温灸须由专业人员操作）、足下常暖，汗出当风尤忌。',en:'keep warm, avoid cold (protect waist/feet)'},
+  taiyin:{zh:'湿土司天之年，甜腻助湿、居处须防潮：少甜腻厚味，梅雨潮湿季防霉除湿，忌贪凉卧地、久处地下室。宜健脾祛湿、衣着透气，勿久穿未干之衣。',en:'sweet-greasy that aids damp, avoid damp lodging'},
+  shaoyin:{zh:'君火司天之年，辛辣温燥与熬夜宜忌：易引心火上炎、口疮失眠。宜静心午休、咸寒清热，远烈酒与烦躁动怒，夏秋尤防心系浮火。',en:'acrid warming-dry, staying up late'},
+  shaoyang:{zh:'相火司天之年，辛辣酒类与温补过当易生燥火：宜酸凉敛火、多饮水，忌烧烤煎炸与情绪亢奋，春夏季防肝阳上扰。',en:'acrid alcohol, avoid dry-heat flare-up'},
+  yangming:{zh:'燥金司天之年，辛辣油炸与过度发汗易耗津液：宜润燥养肺、白色食物、多饮温水，忌久曝干燥环境与久咳伤肺，秋燥时节尤当护津。',en:'acrid fried, do not drain body fluid'},
+  jueyin:{zh:'风木司天之年，郁怒与当风受凉须防：大怒引动内风，直吹冷风易袭肝筋目。宜舒肝息风、避大风，调畅情志，春风起时尤当护头颈。',en:'anger and exposure to wind'}
+};
+/* HUA_NUM（运气生成数·河图数：风3/8 热2/7 雨5/10 清4/9 寒1/6）当前未参与计算，保留为参考资料 */
+const YUN_WU={甲:'土',己:'土',乙:'金',庚:'金',丙:'水',辛:'水',丁:'木',壬:'木',戊:'火',癸:'火'};
+const SI_WU={jueyin:'木',shaoyin:'火',taiyin:'土',shaoyang:'火',yangming:'金',taiyang:'水'};
+const ZQ_WU={jueyin:'木',shaoyin:'火',taiyin:'土',shaoyang:'火',yangming:'金',taiyang:'水'};
+/* 岁会判定：岁运五行须与「本宫年支」同——木运临卯、火运临午、金运临酉、水运临子、土运临四季(辰戌丑未)。仅按五行相等会把寅/巳/申/亥误判为岁会。 */
+const SUI_HUI={'木':['卯'],'火':['午'],'土':['辰','戌','丑','未'],'金':['酉'],'水':['子']};
+const isYang = g => '甲丙戊庚壬'.includes(g);
+
+const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const GAN_PY=['Jia','Yi','Bing','Ding','Wu','Ji','Geng','Xin','Ren','Gui'];
+const ZHI_PY=['Zi','Chou','Yin','Mao','Chen','Si','Wu','Wei','Shen','You','Xu','Hai'];
+
+let curLang = 'zh';
+const APP_VER = 'v2.1';
+const T = o => (typeof o==='string'? o : o[curLang]);
+function esc(s){return (s==null?'':(''+s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+let lastBorn=null, lastGz=null, lastBornObj=null;
+
+/* 下拉初始化已移至脚本末尾（避免 const 暂时性死区） */
+function fillDays(){
+  const m=+document.getElementById('m').value, y=+document.getElementById('y').value;
+  const max=m===2?(y%4===0&&y%100!==0||y%400===0?29:28):[4,6,9,11].includes(m)?30:31;
+  const d=document.getElementById('d'); const old=+d.value;
+  d.innerHTML='';
+  for(let i=1;i<=max;i++){d.add(new Option(i+(curLang==='zh'?'日':''), i));}
+  d.value=Math.min(old,max);
+}
+function getGanZhi(year,month,day){
+  let y=year;
+  if(month<2||(month===2&&day<4)) y=year-1;
+  let g=(y-4)%10; if(g<0)g+=10;
+  let z=(y-4)%12; if(z<0)z+=12;
+  return GAN[g]+ZHI[z];
+}
+function gzLabel(gz){
+  const gi=GAN.indexOf(gz[0]), zi=ZHI.indexOf(gz[1]);
+  return curLang==='zh' ? gz : (GAN_PY[gi]+'-'+ZHI_PY[zi]);
+}
+
+/* ===== 十二时辰 ===== */
+const SHI=[
+  {zh:'子时',en:'Zi (23:00–01:00)'},{zh:'丑时',en:'Chou (01:00–03:00)'},
+  {zh:'寅时',en:'Yin (03:00–05:00)'},{zh:'卯时',en:'Mao (05:00–07:00)'},
+  {zh:'辰时',en:'Chen (07:00–09:00)'},{zh:'巳时',en:'Si (09:00–11:00)'},
+  {zh:'午时',en:'Wu (11:00–13:00)'},{zh:'未时',en:'Wei (13:00–15:00)'},
+  {zh:'申时',en:'Shen (15:00–17:00)'},{zh:'酉时',en:'You (17:00–19:00)'},
+  {zh:'戌时',en:'Xu (19:00–21:00)'},{zh:'亥时',en:'Hai (21:00–23:00)'}
+];
+/* 综合体质结论 */
+function computeSum(gz){
+  const gan=gz[0], zhi=gz[1];
+  const yun=YUN[gan], qi=QI[zhi];
+  let sum, sumTags;
+  if(yun.lv.zh==='太过'){
+    sum = curLang==='zh'
+      ? `先天以「${yun.e.zh}运太过」为主导：本脏（${yun.e.zh}）气偏盛，而易抑 ${SUPP[gan].zh}；又值「${T(SI_NAME[qi.stKey])}」之年，${qi.d.zh} 综合来看，您先天偏向「${yun.e.zh}旺而${SUPP[gan].zh}弱、兼${qiKeyWord(qi.stKey)}」之体。`
+      : `Inborn constitution is led by "${yun.e.en} Movement in Excess": this element (${yun.e.en}) is predominant, while ${SUPP[gan].en} is suppressed; born in a "${T(SI_NAME[qi.stKey])}" year, ${qi.d.en} Overall you tend toward "${yun.e.en} exuberant and ${SUPP[gan].en} weak, with ${qiKeyWord(qi.stKey)}".`;
+    sumTags = curLang==='zh' ? [yun.e.zh+'运太过', SUPP[gan].zh+'偏弱', T(SI_NAME[qi.stKey])] : [yun.e.en+' '+yun.lv.en, SUPP[gan].en+' weak', T(SI_NAME[qi.stKey])];
+  }else{
+    sum = curLang==='zh'
+      ? `先天以「${yun.e.zh}运不及」为主导：本脏（${yun.e.zh}，弱脏为${WEAK[gan].zh}）禀赋偏弱；又值「${T(SI_NAME[qi.stKey])}」之年，${qi.d.zh} 综合来看，您先天偏向「${WEAK[gan].zh}弱、兼${qiKeyWord(qi.stKey)}」之体，宜早养防偏。`
+      : `Inborn constitution is led by "${yun.e.en} Movement in Deficiency": this element (${yun.e.en}, weak organ ${WEAK[gan].en}) is inherently insufficient; born in a "${T(SI_NAME[qi.stKey])}" year, ${qi.d.en} Overall you tend toward "${WEAK[gan].en} weak, with ${qiKeyWord(qi.stKey)}" — best to nourish early and prevent deviation.`;
+    sumTags = curLang==='zh' ? [yun.e.zh+'运不及', WEAK[gan].zh+'偏弱', T(SI_NAME[qi.stKey])] : [yun.e.en+' '+yun.lv.en, WEAK[gan].en+' weak', T(SI_NAME[qi.stKey])];
+  }
+  return {sum, sumTags};
+}
+function qiKeyWord(stKey){
+  const m={jueyin:'风',shaoyin:'热',taiyin:'湿',shaoyang:'火',yangming:'燥',taiyang:'寒'};
+  const me={jueyin:'wind',shaoyin:'heat',taiyin:'damp',shaoyang:'fire',yangming:'dryness',taiyang:'cold'};
+  return curLang==='zh'?m[stKey]:me[stKey];
+}
+
+
+/* 弱项与需注意 */
+function computeWeak(gz){
+  const gan=gz[0], zhi=gz[1];
+  const yun=YUN[gan], qi=QI[zhi];
+  const isDef=yun.lv.zh==='不及';
+  const wk=isDef?WEAK[gan]:SUPP[gan];
+  const zhiName=T(SI_NAME[qi.stKey]);
+  let weakTitle, weakText;
+  if(isDef){
+    weakTitle = curLang==='zh' ? wk.zh+'偏弱（不及之年）' : wk.en+' weak (Deficient year)';
+    weakText = curLang==='zh'
+      ? `先天「${yun.e.zh}运不及」，本脏（${yun.e.zh}）禀赋偏弱，弱脏在<b>${wk.zh}</b>。常见：${yun.s.zh} 又值「${zhiName}」之年，${qi.d.zh} 故<b>${wk.zh}</b>更当早养、防微杜渐。`
+      : `Inborn "${yun.e.en} Movement in Deficiency": this element is inherently insufficient; the vulnerable organ is the <b>${wk.en}</b>. Common signs: ${yun.s.en} Born in a "${zhiName}" year, ${qi.d.en} — so the <b>${wk.en}</b> should be nourished early to prevent deviation.`;
+  }else{
+    weakTitle = curLang==='zh' ? wk.zh+'受抑偏弱（太过之年）' : wk.en+' suppressed (Excess year)';
+    weakText = curLang==='zh'
+      ? `先天「${yun.e.zh}运太过」，本脏偏亢，易乘克而抑<b>${wk.zh}</b>（${wk.zh}受抑偏弱）。常见：${yun.s.zh} 又值「${zhiName}」之年，${qi.d.zh} 故<b>${wk.zh}</b>宜护、勿令过伤。`
+      : `Inborn "${yun.e.en} Movement in Excess": the element is hyperactive and easily suppresses the <b>${wk.en}</b> (which becomes the weak link). Common signs: ${yun.s.en} Born in a "${zhiName}" year, ${qi.d.en} — so the <b>${wk.en}</b> should be protected from over-injury.`;
+  }
+  const tags = curLang==='zh' ? [wk.zh+(isDef?'偏弱':'受抑'), zhiName] : [wk.en+(isDef?' weak':' suppressed'), zhiName];
+  return {weakTitle, weakText, tags, organ:wk};
+}
+
+/* 先天体质标签：五运主导 + 六气（司天/在泉）叠加 */
+function computeLabel(gz){
+  const gan=gz[0], zi=QI[gz[1]];
+  let zh=YUN_LABEL[gan].zh, en=YUN_LABEL[gan].en;
+  const mz=[QI_MOD[zi.stKey].zh, QI_MOD[zi.zqKey].zh].filter((m,i,a)=>a.indexOf(m)===i);
+  for(const m of mz){ const w=m.replace('兼',''); if(!zh.includes(w)) zh=zh+m; }
+  const me=[QI_MOD[zi.stKey].en, QI_MOD[zi.zqKey].en].filter((m,i,a)=>a.indexOf(m)===i);
+  for(const m of me){ const w=m.replace('with ','').toLowerCase(); if(!en.toLowerCase().includes(w)) en=en+' '+m; }
+  return {zh,en};
+}
+
+/* 特殊年份：天符 / 岁会 / 同天符 / 同岁会 / 太乙天符 */
+function specialYear(gz){
+  const gan=gz[0], zhi=gz[1];
+  const stKey=QI[zhi].stKey, zqKey=QI[zhi].zqKey;
+  const yw=YUN_WU[gan], sw=SI_WU[stKey], zw=ZQ_WU[zqKey];
+  const yang=isYang(gan);
+  /* 岁会：须岁运五行与本宫年支对应（见 SUI_HUI），而非仅五行相等 */
+  const tf = yw===sw, sh = !!(SUI_HUI[yw] && SUI_HUI[yw].includes(zhi));
+  const b=[];
+  if(tf) b.push(curLang==='zh'?'天符年':'Tian-Fu year');
+  if(sh) b.push(curLang==='zh'?'岁会年':'Sui-Hui year');
+  /* 同天符：岁运（阳年/太过）与「在泉」之气同气；同岁会：岁运（阴年/不及）与「在泉」同气 */
+  if(yw===zw && yang) b.push(curLang==='zh'?'同天符':'Tong-Tian-Fu');
+  if(yw===zw && !yang) b.push(curLang==='zh'?'同岁会':'Tong-Sui-Hui');
+  if(tf && sh) b.push(curLang==='zh'?'太乙天符':'Tai-Yi Tian-Fu');
+  return b;
+}
+
+/* 先天体质 */
+function judge(){
+  const y=+document.getElementById('y').value, m=+document.getElementById('m').value, d=+document.getElementById('d').value, h=+document.getElementById('h').value;
+  const name=(document.getElementById('nm').value||'').trim().slice(0,20);
+  const gz=getGanZhi(y,m,d);
+  lastBorn={y,m,d,h,name}; lastBornObj={y,m,d,h,name}; lastGz=gz;
+  renderResult(gz);
+  saveHistory(y,m,d,h,name,gz,YUN[gz[0]].e.zh+' '+YUN[gz[0]].lv.zh,T(SI_NAME[QI[gz[1]].stKey]));
+}
+function renderResult(gz){
+  const y=lastBornObj.y,m=lastBornObj.m,d=lastBornObj.d,h=lastBornObj.h;
+  const gan=gz[0], zhi=gz[1];
+  const yun=YUN[gan], qi=QI[zhi];
+  const U=UI[curLang];
+
+  let yunT = yun.lv.zh==='不及'
+      ? yun.t[curLang].replace('_body_', WEAK[gan][curLang])
+      : yun.t[curLang].replace('_body_', SUPP[gan][curLang]);
+
+  const sumObj = computeSum(gz);
+  const weakObj = computeWeak(gz);
+
+  document.getElementById('gz').textContent=gzLabel(gz);
+  const shiName = T(SHI[h]);
+  document.getElementById('gzEn').textContent = curLang==='zh'
+    ? `出生：${y}年${m}月${d}日 ${shiName} ｜ 干支纪年：${gz}年（以立春约2月4日为界）`
+    : `Born: ${y}-${m}-${d} ${shiName} ｜ Stem-Branch year: ${gzLabel(gz)} (Start-of-Spring boundary)`;
+  document.getElementById('tags').innerHTML=`<span class="tag">${yun.e[curLang]} ${yun.lv[curLang]}</span><span class="tag">${T(SI_NAME[qi.stKey])}</span>`;
+  const labelObj=computeLabel(gz);
+  const spR=specialYear(gz);
+  let lb=`<div class="lt">${U.labelTitle}</div><div class="ltag">${labelObj[curLang]}</div><div style="font-size:13px;color:var(--muted);margin-top:6px">标签＝五运主导 ＋ 当年六气偏向（司天·在泉分主上下半年）</div>`;
+  if(spR.length){ lb+=`<div class="badge">${spR.join('</div><div class="badge">')}</div>`; }
+  document.getElementById('labelBox').innerHTML=lb;
+  document.getElementById('yunText').textContent=yunT+' '+yun.s[curLang];
+  document.getElementById('qiText').textContent=(curLang==='zh'?`本年「${T(SI_NAME[qi.stKey])}司天，${T(SI_NAME[qi.zqKey])}在泉」。`:`This year "${T(SI_NAME[qi.stKey])} supervising heaven, ${T(SI_NAME[qi.zqKey])} at the spring". `)+qi.d[curLang];
+  document.getElementById('sumText').textContent=sumObj.sum;
+  document.getElementById('sumTags').innerHTML=sumObj.sumTags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('weakBox').innerHTML=`<div class="row-title">${weakObj.weakTitle}</div><p>${weakObj.weakText}</p>`;
+  document.getElementById('tips').textContent=yun.tips[curLang]+'　'+yearDietFocus(zhi);
+  document.getElementById('avoidBox').innerHTML=`<div class="row-title">${U.sec6}</div><p><b style="color:var(--orange)">${curLang==='zh'?'忌：':'Avoid: '}</b>${AVOID[gan][curLang]}；${AVOID_QI[qi.stKey][curLang]}</p>`;
+  document.getElementById('note').textContent=U.note;
+
+  document.getElementById('result').style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+/* 语言切换 */
+function toggleLang(){
+  curLang = curLang==='zh' ? 'en' : 'zh';
+  const btn=document.getElementById('langBtn'); if(btn) btn.textContent = curLang==='zh' ? 'EN' : '中';
+  applyLang();
+}
+function applyLang(){
+  const U=UI[curLang];
+  document.documentElement.lang = curLang==='zh' ? 'zh-CN' : 'en';
+  ['seal','title','sub','quote','warn','inputLabel','btn','sec1','sec2','sec3','sec4','sec5','sec6','note','histTitle','clear','reportBtn','disc','footer'].forEach(id=>{
+    const el=document.getElementById('ui_'+id); if(el) el.innerHTML=U[id];
+  });
+  document.getElementById('ui_disc').innerHTML=U.disc;
+  document.getElementById('btnSave').textContent=U.btnSave;
+  document.getElementById('btnCopy').textContent=U.btnCopy;
+  document.getElementById('btnShare').textContent=U.btnShare;
+  document.getElementById('btnClose').textContent=U.btnClose;
+  const y=document.getElementById('y'),m=document.getElementById('m'),d=document.getElementById('d');
+  const yv=+y.value, mv=+m.value, dv=+d.value;
+  y.innerHTML=''; for(let i=new Date().getFullYear();i>=1920;i--){y.add(new Option(i+(curLang==='zh'?'年':''), i));} y.value=yv;
+  m.innerHTML=''; for(let i=1;i<=12;i++){m.add(new Option(i+(curLang==='zh'?'月':''), i));} m.value=mv;
+  fillDays(); d.value=dv;
+  const hh=document.getElementById('h');
+  const hv = hh.value ? +hh.value : 4;
+  hh.innerHTML='';
+  SHI.forEach((s,i)=>{hh.add(new Option(T(s), i));});
+  hh.value=hv;
+  document.getElementById('ui_timeTip').textContent=U.inputTime;
+  document.getElementById('gzEn').textContent='';
+  if(lastBorn) renderResult(getGanZhi(lastBorn.y,lastBorn.m,lastBorn.d));
+  if(document.getElementById('reportModal').classList.contains('show')) openReport();
+}
+
+/* 本年饮食侧重：取司天/在泉之食药性味与宜食，融入饮食建议（不另立运气篇幅） */
+function yearDietFocus(zhi){
+  const qi=QI[zhi];
+  const st=SI_TIAN[qi.stKey], zq=ZAI_QUAN[qi.zqKey];
+  const L=curLang;
+  return (L==='zh'
+    ? `本年气候偏「${T(SI_NAME[qi.stKey])}·${T(SI_NAME[qi.zqKey])}」，饮食可侧重「${st.wei.zh}·${zq.wei.zh}」之性，宜常食：${st.food.zh}、${zq.food.zh}。`
+    : `This year's climate leans toward "${T(SI_NAME[qi.stKey])} · ${T(SI_NAME[qi.zqKey])}"; favor a "${st.wei[L]} · ${zq.wei[L]}" nature, with foods such as ${st.food[L]}, ${zq.food[L]}.`);
+}
+
+/* ===== 报告（可转发）===== */
+function getReportData(gz){
+  const y=lastBornObj.y,m=lastBornObj.m,d=lastBornObj.d;
+  const gan=gz[0], zhi=gz[1];
+  const yun=YUN[gan], qi=QI[zhi];
+  const U=UI[curLang];
+  const sumObj=computeSum(gz), weakObj=computeWeak(gz);
+  const labelObj=computeLabel(gz);
+  const avoidText = AVOID[gan][curLang]+'；'+AVOID_QI[qi.stKey][curLang];
+  const isDef = yun.lv.zh==='不及';
+  const organ=weakObj.organ[curLang];
+  const conclNote = curLang==='zh'
+    ? `注解：您出生年属「${yun.e.zh}运${yun.lv.zh}」，意思是${yun.e.zh}这个系统先天${(isDef?'偏弱、更需要养护':'偏旺、容易压制别处')}。这只是倾向，不是定数——饮食作息调得好，完全可以改善。`
+    : `Note: your birth year belongs to "${yun.e.en} Movement ${yun.lv.en}", meaning this system is inborn ${(isDef?'weaker and needs more care':'predominant and may suppress others')}. This is only a tendency, not fixed — good diet and habits can improve it.`;
+  const weakNote = curLang==='zh'
+    ? `注解：最该留意的是「${organ}」。先天偏弱或受抑，平时少熬夜、少过劳，换季与感冒高发时多护着它，有不适早调理。`
+    : `Note: pay most attention to the "${organ}". Inborn weak or suppressed — avoid staying up late and overwork, protect it during season changes and cold/flu season, and regulate early if discomfort arises.`;
+  const name = (lastBornObj && lastBornObj.name) ? lastBornObj.name : '';
+  const safeName = esc(name);
+  const birthLine = (curLang==='zh'
+      ? `出生：${y}年${m}月${d}日 ${T(SHI[lastBornObj.h])} ｜ 干支纪年：${gz}年（以立春约2月4日为界）`
+      : `Born: ${y}-${m}-${d} ${T(SHI[lastBornObj.h])} ｜ Stem-Branch year: ${gzLabel(gz)} (Start-of-Spring boundary)`)
+    + (name?` ｜ 客户：${safeName}`:'');
+  return {
+    clinic:U.seal, title:U.rptTitle, sub:U.rptSub,
+    birthLine, name,
+    tags:[yun.e[curLang]+' '+yun.lv[curLang], weakObj.tags[0], weakObj.tags[1]],
+    labelTitle:U.rLabel, label:labelObj[curLang],
+    conclTitle:U.rConcl, concl:sumObj.sum, conclNote,
+    weakTitle:U.rWeak, weakText:weakObj.weakText, weakNote,
+    careTitle:U.rCare, care:yun.tips[curLang]+'　'+yearDietFocus(zhi),
+    avoidTitle:U.rAvoid, avoid:avoidText,
+    contactTitle:U.rContact, contact:U.rContactNote,
+    disc:U.rDisc
+  };
+}
+function openReport(){
+  if(!lastGz){toast('请先辨识体质');return;}
+  const D=getReportData(lastGz);
+  const tagsHtml=D.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('rptCard').innerHTML=`
+    <div class="rpt-head">
+      <div class="rpt-seal">${D.clinic}</div>
+      <div class="rpt-title">${D.title}</div>
+      <div class="rpt-sub">${D.sub}</div>
+    </div>
+    <div class="rpt-birth">${D.birthLine}</div>
+    <div class="rpt-tags">${tagsHtml}</div>
+    <div class="rpt-sec"><h4>${D.labelTitle}</h4><p class="rpt-label">${D.label}</p></div>
+    <div class="rpt-sec"><h4>${D.conclTitle}</h4><p>${D.concl}</p><div class="rpt-note">${D.conclNote}</div></div>
+    <div class="rpt-sec weak"><h4>${D.weakTitle}</h4><p>${D.weakText}</p><div class="rpt-note">${D.weakNote}</div></div>
+    <div class="rpt-sec"><h4>${D.careTitle}</h4><p>${D.care}</p></div>
+    <div class="rpt-sec weak"><h4>${D.avoidTitle}</h4><p>${D.avoid}</p></div>
+    <div class="rpt-box">
+      <div class="rt">${D.contactTitle}</div>
+      <div class="rp">416 800 3978</div>
+      <div class="rn">到院面诊辨证后调理（本工具不开方）</div>
+    </div>
+    <div class="rpt-disc">${D.disc}</div>`;
+  document.getElementById('rptImgBox').innerHTML='';
+  document.getElementById('rptHint').textContent='';
+  document.getElementById('reportModal').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeReport(){
+  document.getElementById('reportModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+/* 生成分享图（离屏 canvas，无需联网/第三方库）*/
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function wrapText(ctx,text,font,maxW){
+  ctx.font=font;
+  const lines=[]; let line='';
+  for(const ch of (text||'')){
+    if(ch==='\n'){lines.push(line);line='';continue;}
+    const t=line+ch;
+    if(ctx.measureText(t).width>maxW){ if(line) lines.push(line); line=ch; }else line=t;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+function drawPills(ctx,tags,x,y,maxW,font,fg,bg){
+  ctx.font=font;ctx.textBaseline='middle';ctx.textAlign='center';
+  let cx=x,cy=y;const padX=18,h=46,gap=14;
+  for(const t of tags){const w=ctx.measureText(t).width+padX*2;
+    if(cx+w>maxW+2){cx=x;cy+=h+gap;}
+    roundRect(ctx,cx,cy,w,h,23);ctx.fillStyle=bg;ctx.fill();
+    ctx.fillStyle=fg;ctx.fillText(t,cx+w/2,cy+h/2+1);cx+=w+gap;}
+  return cy+h;
+}
+function saveReport(){
+  if(!lastGz){toast('请先辨识体质');return;}
+  const _raw=getReportData(lastGz);
+  const _strip=s=>(s==null?'':(''+s)).replace(/<[^>]+>/g,'');
+  const D={tags:_raw.tags, name:_raw.name};
+  for(const k in _raw){ if(k!=='tags' && k!=='name') D[k]=_strip(_raw[k]); }
+  const W=750, pad=44, innerW=W-pad*2;
+  const F='"PingFang SC","Microsoft YaHei",sans-serif';
+  const C={bg:'#F7F2E7',card:'#FFFDF8',green:'#2F5D34',greenD:'#234A28',orange:'#C26A3C',ink:'#33312B',muted:'#6F6657',sand:'#EFE3D0',line:'#E0D2BA'};
+  const c=document.createElement('canvas'); const ctx=c.getContext('2d');
+  const ops=[]; let y=pad;
+  const add=(o)=>ops.push(o);
+  // 逐行推进 y：每行单独占位，避免多行文字重叠
+  const pushWrap=(type,text,font,maxW,lineH)=>{
+    const L=wrapText(ctx,text,font,maxW);
+    L.forEach(ln=>{add({t:type,text:ln,y}); y+=lineH;});
+  };
+  pushWrap('ctitle',D.title,'bold 44px '+F,innerW,60); y+=8;
+  pushWrap('csub',D.sub,'24px '+F,innerW,34); y+=8;
+  if(D.name){ add({t:'cname',text:D.name,y}); y+=42; }
+  add({t:'cline',y}); y+=24;
+  pushWrap('cp',D.birthLine,'28px '+F,innerW,42); y+=10;
+  add({t:'cpills',tags:D.tags,y}); y+=64;
+  pushWrap('clabel',D.label,'bold 34px '+F,innerW,48); y+=8;
+  function section(head,body){
+    add({t:'ch',text:head,y}); y+=54;
+    pushWrap('cp',body,'28px '+F,innerW,42); y+=20;
+  }
+  section(D.conclTitle,D.concl);
+  section(D.weakTitle,D.weakText);
+  section(D.careTitle,D.care);
+  section(D.avoidTitle,D.avoid);
+  const cb=wrapText(ctx,D.contact,'bold 30px '+F,innerW-36);
+  const cbH=cb.length*44+52;
+  add({t:'cbox',title:D.contactTitle,lines:cb,h:cbH,y}); y+=cbH+20;
+  pushWrap('cd',D.disc,'22px '+F,innerW,32); y+=10;
+  add({t:'cver',text:'先天体质辨识 · 版本 '+APP_VER,y}); y+=26;
+  y+=pad;
+  c.width=W; c.height=y;
+  ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,y);
+  ctx.fillStyle=C.card; roundRect(ctx,pad*0.5,pad*0.5,innerW+pad, y-pad, 20); ctx.fill();
+  for(const o of ops){
+    if(o.t==='ctitle'){ctx.font='bold 44px '+F;ctx.fillStyle=C.greenD;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.text,W/2,o.y+30);}
+    else if(o.t==='csub'){ctx.font='24px '+F;ctx.fillStyle=C.muted;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.text,W/2,o.y+17);}
+    else if(o.t==='cname'){ctx.font='bold 26px '+F;ctx.fillStyle=C.orange;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('客户：'+o.text,W/2,o.y+20);}
+    else if(o.t==='cline'){ctx.strokeStyle=C.line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,o.y);ctx.lineTo(W-pad,o.y);ctx.stroke();}
+    else if(o.t==='cp'){ctx.font='28px '+F;ctx.fillStyle=C.ink;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(o.text,pad,o.y);}
+    else if(o.t==='ch'){ctx.font='bold 31px '+F;ctx.textBaseline='top';ctx.fillStyle=C.orange;ctx.fillRect(pad,o.y+4,8,30);ctx.fillStyle=C.greenD;ctx.fillText(o.text,pad+18,o.y);}
+    else if(o.t==='cpills'){drawPills(ctx,o.tags,pad,o.y,innerW,'26px '+F,C.green,'#EAF0EA');}
+    else if(o.t==='clabel'){ctx.font='bold 34px '+F;ctx.fillStyle=C.greenD;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.text,W/2,o.y+24);}
+    else if(o.t==='cbox'){ctx.fillStyle='#FBF1E8';roundRect(ctx,pad,o.y,innerW,o.h,14);ctx.fill();
+        ctx.strokeStyle=C.orange;ctx.lineWidth=2;roundRect(ctx,pad,o.y,innerW,o.h,14);ctx.stroke();
+        ctx.font='bold 27px '+F;ctx.fillStyle=C.greenD;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(o.title,pad+18,o.y+14);
+        ctx.font='bold 30px '+F;ctx.fillStyle=C.orange;o.lines.forEach((ln,i)=>ctx.fillText(ln,pad+18,o.y+50+i*44));}
+    else if(o.t==='cd'){ctx.font='22px '+F;ctx.fillStyle=C.muted;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText(o.text,pad,o.y);}
+    else if(o.t==='cver'){ctx.font='20px '+F;ctx.fillStyle=C.muted;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.text,W/2,o.y+13);}
+  }
+  /* 直接下载为 PNG（文件名含客户姓名/编号） */
+  try{
+    const a=document.createElement('a');
+    a.href=c.toDataURL('image/png');
+    const fname=(D.name? D.name+'_':'')+'先天体质报告.png';
+    a.download=fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast('报告图片已保存：'+fname);
+  }catch(e){ toast('当前环境不支持保存图片，请改用「复制文字」'); }
+}
+
+/* 复制文字 / 分享 */
+function copyReport(){
+  if(!lastGz){toast('请先辨识体质');return;}
+  const D=getReportData(lastGz);
+  const txt=`${D.clinic}\n${D.title}\n${D.birthLine}\n\n${D.labelTitle}\n${D.label}\n\n${D.conclTitle}\n${D.concl}\n${D.conclNote}\n\n${D.weakTitle}\n${D.weakText}\n${D.weakNote}\n\n${D.careTitle}\n${D.care}\n\n${D.avoidTitle}\n${D.avoid}\n\n${D.contactTitle}\n${D.contact}\n\n${D.disc}`;
+  copyText(txt);
+}
+function copyText(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>toast(UI[curLang].toastCopy)).catch(()=>fallbackCopy(t));
+  }else fallbackCopy(t);
+}
+function fallbackCopy(t){
+  const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.top='0';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,ta.value.length);
+  try{document.execCommand('copy');toast(UI[curLang].toastCopy);}catch(e){toast('请长按文字选择复制');}
+  document.body.removeChild(ta);
+}
+function shareReport(){
+  if(!lastGz){toast('请先辨识体质');return;}
+  const D=getReportData(lastGz);
+  const txt=`${D.clinic} · ${D.title}\n${D.birthLine}\n${D.labelTitle}\n${D.label}\n\n${D.conclTitle}\n${D.concl}\n${D.conclNote}\n\n${D.weakTitle}\n${D.weakText}\n${D.weakNote}\n\n${D.careTitle}\n${D.care}\n\n${D.avoidTitle}\n${D.avoid}\n\n${D.contactTitle}\n${D.contact}\n\n${D.disc}`;
+  if(navigator.share){navigator.share({title:D.title,text:txt}).catch(()=>{});}
+  else {copyReport();toast(UI[curLang].toastNoShare);}
+}
+
+/* Toast */
+let _toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(_toastTimer); _toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+/* 历史 */
+function saveHistory(y,m,d,h,name,gz,yun,qi){
+  let list=JSON.parse(lsGet('tizhi_his')||'[]');
+  list.unshift({y,m,d,h,name,gz,yun,qi}); list=list.slice(0,8);
+  lsSet('tizhi_his',JSON.stringify(list)); renderHistory();
+}
+/* 兼容新旧历史格式：gz 以「庚午」式双字串存储；早期版本 gz 误存为时辰序号、真实干支落在 yun 字段 */
+function getHistGz(x){
+  const g = x.gz;
+  if(typeof g==='string' && g.length>=2 && GAN.includes(g[0]) && ZHI.includes(g[1])) return g;
+  if(Array.isArray(g) && g.length===2 && GAN.includes(g[0]) && ZHI.includes(g[1])) return g[0]+g[1];
+  if(typeof x.yun==='string' && x.yun.length>=2 && GAN.includes(x.yun[0]) && ZHI.includes(x.yun[1])) return x.yun[0]+x.yun[1];
+  return null;
+}
+function getHistH(x){ return (typeof x.h==='number' && x.h>=0 && x.h<12) ? x.h : 0; }
+function renderHistory(){
+  const h=JSON.parse(lsGet('tizhi_his')||'[]');
+  const box=document.getElementById('historyBox');
+  if(!h.length){box.style.display='none';return;}
+  box.style.display='block';
+  document.getElementById('historyList').innerHTML=h.map((x,i)=>{
+    const gz=getHistGz(x), gzStr = gz || '—';
+    const hour = (typeof x.h==='number' && x.h>=0 && x.h<12) ? T(SHI[x.h]) : '—';
+    const name = (x.name && x.name.trim()) ? x.name.trim() : '';
+    const line = `${x.y}年${x.m}月${x.d}日 ${hour} · ${gzStr}年` + (name?` ｜ ${esc(name)}`:'');
+    return `<div class="hist-item" onclick="openHistoryReport(${i})"><span class="hist-main">${line}</span><span class="hist-side">${esc(x.yun)}｜${esc(x.qi)}</span><span class="hist-del" onclick="deleteHistory(${i});event.stopPropagation();" title="删除本条">×</span><span class="hist-open">查看▸</span></div>`;
+  }).join('');
+}
+function openHistoryReport(idx){
+  const h=JSON.parse(lsGet('tizhi_his')||'[]');
+  const x=h[idx]; if(!x){toast('记录不存在');return;}
+  const gz=getHistGz(x); if(!gz){toast('该记录数据不完整，请重新辨识后保存');return;}
+  const hh=getHistH(x);
+  const name=(x.name&&x.name.trim())?x.name.trim():'';
+  lastBorn={y:x.y,m:x.m,d:x.d,h:hh,name}; lastBornObj={y:x.y,m:x.m,d:x.d,h:hh,name}; lastGz=gz;
+  openReport();
+}
+function deleteHistory(idx){
+  let list=JSON.parse(lsGet('tizhi_his')||'[]');
+  if(idx<0||idx>=list.length){return;}
+  list.splice(idx,1);
+  lsSet('tizhi_his',JSON.stringify(list)); renderHistory();
+}
+function clearHistory(){lsDel('tizhi_his');renderHistory();}
+renderHistory();
+</script>
+<script>
+/* ===== 初始化引导（下拉年份/月份/日 + 初始渲染）===== */
+(function(){
+  const y=document.getElementById('y'),m=document.getElementById('m'),d=document.getElementById('d');
+  const now=new Date().getFullYear();
+  for(let i=now;i>=1920;i--){y.add(new Option(i+(curLang==='zh'?'年':''), i));}
+  for(let i=1;i<=12;i++){m.add(new Option(i+(curLang==='zh'?'月':''), i));}
+  for(let i=1;i<=31;i++){d.add(new Option(i+(curLang==='zh'?'日':''), i));}
+  m.onchange=d.onchange=fillDays; fillDays();
+  y.value=now-30; m.value=1; d.value=1;
+  const verEl=document.querySelector('.ver'); if(verEl) verEl.textContent='先天体质辨识 · 版本 '+APP_VER+'（运气算法 v1.0）';
+  applyLang();
+})();
+</script>
+</body>
+</html>
