@@ -129,17 +129,17 @@
   <header>
     <div class="seal" id="ui_seal">东方针灸中医馆</div>
     <h1 id="ui_title">先天体质辨识</h1>
-    <div class="sub" id="ui_sub">五运六气 · 以出生年干支定人身先天禀赋</div>
+    <div class="sub" id="ui_sub">黃帝内經·五运六气 定人身先天禀赋</div>
     <button id="langBtn" class="lang-btn" onclick="toggleLang()">EN</button>
   </header>
 
   <div class="card">
     <label id="ui_inputLabel">请选择您的出生日期</label>
     <div class="row">
-      <select id="y"></select><select id="m"></select><select id="d"></select><select id="h"></select>
+      <select id="y"></select><select id="m"></select><select id="d"></select><!--select id="h"-->
     </div>
-    <div style="font-size:15px;color:var(--muted);margin-top:8px" id="ui_timeTip"></div>
-    <input id="nm" class="name-input" type="text" maxlength="20" placeholder="姓名 / 编号（选填，用于报告与记录）" />
+    <!--<div style="font-size:15px;color:var(--muted);margin-top:8px" id="ui_timeTip"></div>-->
+    <input id="nm" class="name-input" type="text" maxlength="20" placeholder="姓名(選填）NAME(Optional) " />
     <button class="btn" id="ui_btn" onclick="judge()">辨识我的先天体质</button>
   </div>
 
@@ -209,15 +209,15 @@ const UI = {
     rptTitle:'先天体质报告', rptSub:'五运六气 · 先天禀赋辨识',
     rConcl:'一、禀赋倾向结论', rWeak:'二、弱项与需注意', rCare:'三、饮食与调理建议',
     rAvoid:'四、宜忌 · 忌口',
-    rContact:'五、到院咨询 / 预约调理',
+    rContact:'五、到舘咨询 / 预约调理',
     rLabel:'禀赋标签',
     rDisc:'※ 本报告依据中医「五运六气」推算先天禀赋倾向，仅供养生参考，不作诊疗依据。',
-    rContactNote:'到院咨询 / 预约电话：416 800 3978（本工具仅供养生科普，不提供在线开方；调理须经执业中医师面诊辨证）',
+    rContactNote:'到舘咨询 / 预约电话：416 800 3978（本工具仅供养生科普，不提供在线开方；调理须经执业中医师面诊辨证）',
     btnSave:'另存为', btnCopy:'复制文字', btnShare:'分享', btnClose:'关闭',
     toastCopy:'已复制，可粘贴到微信发给客人', toastNoShare:'当前环境不支持系统分享，已为您复制文字'
   },
   en:{
-    seal:'DongFang Acupuncture & TCM Clinic', title:'Inborn Constitution Assessment',
+    seal:'Oriental Ensure Acupuncture Clinic', title:'Inborn Constitution Assessment',
     sub:'Five Movements & Six Qi · inborn endowment by birth-year stem-branch',
     quote:'"Eat the grain of the year to preserve the true, eat the interstitial grain to protect the essence."<br>— Suwen · Zhi Zhen Yao Da Lun',
     warn:'⚠ Herbal regulation must be prescribed by a licensed TCM practitioner. The dietary and lifestyle guidance here is for wellness reference only, not a basis for diagnosis or treatment.',
