@@ -129,16 +129,16 @@
   <header>
     <div class="seal" id="ui_seal">东方针灸中医馆</div>
     <h1 id="ui_title">先天体质辨识</h1>
-    <div class="sub" id="ui_sub">五运六气 · 以出生年干支定人身先天禀赋</div>
+    <div class="sub" id="ui_sub">黃帝内經.五运六气.辨識人身先天禀赋</div>
     <button id="langBtn" class="lang-btn" onclick="toggleLang()">EN</button>
   </header>
 
   <div class="card">
     <label id="ui_inputLabel">请选择您的出生日期</label>
     <div class="row">
-      <select id="y"></select><select id="m"></select><select id="d"></select><select id="h"></select>
+      <select id="y"></select><select id="m"></select><select id="d"></select>
     </div>
-    <div style="font-size:15px;color:var(--muted);margin-top:8px" id="ui_timeTip"></div>
+    
     <input id="nm" class="name-input" type="text" maxlength="20" placeholder="姓名 / 编号（选填，用于报告与记录）" />
     <button class="btn" id="ui_btn" onclick="judge()">辨识我的先天体质</button>
   </div>
@@ -166,7 +166,7 @@
 
   <div class="disclaimer" id="ui_disc"></div>
   <footer id="ui_footer">— 上工治未病 · 顺天时而养 —</footer>
-  <div class="ver">先天体质辨识 · 版本 v2.1（运气算法 v1.0）</div>
+  <div class="ver">先天体质辨识 · 版本 v2.1</div>
 </div>
 
 <!-- 报告弹层 -->
